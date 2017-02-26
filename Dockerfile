@@ -12,8 +12,8 @@ RUN useradd -ms /bin/bash sport_sucker
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-USER sport_sucker
 RUN chown -R sport_sucker /usr/src/app
+USER sport_sucker
 
 COPY . .
 

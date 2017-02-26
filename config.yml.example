@@ -4,8 +4,9 @@ export:
     user: example_user
     password: example_password
     ssl: True
-
 sources:
+  strava:
+    token: abc123def
   swimming_pools:
     Šutka:
       url: http://www.sutka.eu

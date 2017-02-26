@@ -21,13 +21,9 @@ def main():
 
     pprint(cfg)
 
-    client = InfluxDBClient(**cfg['export']['mqtt'])
-    client.create_database('sport_sucker')
-    client.switch_database('sport_sucker')
-
     json_body = []
 
-    for k, v in cfg.sources['swimming_pools'].items():
+    for k, v in cfg['sources']['swimming_pools'].items():
         print(k)
         a = RegexpScraper(**v)
         fields = a.read()
@@ -43,6 +39,9 @@ def main():
             })
 
     # send datapoints
+    client = InfluxDBClient(**cfg['export']['mqtt'])
+    client.create_database('sport_sucker')
+    client.switch_database('sport_sucker')
     pprint(json_body)
     client.write_points(json_body)
 

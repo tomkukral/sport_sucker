@@ -21,33 +21,31 @@ def main():
 
     pprint(cfg)
 
-    json_body = []
+    if cfg.get('sources', {}).get('swimming_pools', False):
+        json_body = []
+        for k, v in cfg['sources']['swimming_pools'].items():
+            print(k)
+            a = RegexpScraper(**v)
+            fields = a.read()
 
-    for k, v in cfg['sources']['swimming_pools'].items():
-        print(k)
-        a = RegexpScraper(**v)
-        fields = a.read()
+            if fields:
+                json_body.append({
+                    "measurement": "people",
+                    "tags": {
+                        "location": k,
+                    },
+                    "time": datetime.datetime.now(tz=pytz.UTC).isoformat(),
+                    "fields": {k: int(v) for (k, v) in fields.items()}
+                })
+            else:
+                print('No fields from {}'.format(k.encode('utf8')))
 
-        if fields:
-            json_body.append({
-                "measurement": "people",
-                "tags": {
-                    "location": k,
-                },
-                "time": datetime.datetime.now(tz=pytz.UTC).isoformat(),
-                "fields": {k: int(v) for (k, v) in fields.items()}
-            })
-        else:
-            print('No fields from {}'.format(k.encode('utf8')))
-
-    # send datapoints
-    client = InfluxDBClient(**cfg['export']['mqtt'])
-    client.create_database('sport_sucker')
-    client.switch_database('sport_sucker')
-    pprint(json_body)
-    client.write_points(json_body)
-
-    return 0
+        # send datapoints
+        client = InfluxDBClient(**cfg['export']['mqtt'])
+        client.create_database('sport_sucker')
+        client.switch_database('sport_sucker')
+        pprint(json_body)
+        client.write_points(json_body)
 
 if __name__ == '__main__':
     main()

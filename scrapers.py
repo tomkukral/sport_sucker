@@ -19,13 +19,16 @@ class RegexpScraper(object):
             response = requests.get(url)
             out = response.text.encode(response.encoding)
 
+        print(url)
+
         return out
 
     def scrape(self, html):
         return html
 
     def parse(self, text, reg):
-        match = re.search(reg, text)
+        pattern = reg.encode('utf8')
+        match = re.search(pattern, text, re.UNICODE)
         if match:
             return match.groupdict()
         else:

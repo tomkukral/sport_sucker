@@ -37,6 +37,8 @@ def main():
                 "time": datetime.datetime.now(tz=pytz.UTC).isoformat(),
                 "fields": {k: int(v) for (k, v) in fields.items()}
             })
+        else:
+            print('No fields from {}'.format(k.encode('utf8')))
 
     # send datapoints
     client = InfluxDBClient(**cfg['export']['mqtt'])
@@ -45,6 +47,7 @@ def main():
     pprint(json_body)
     client.write_points(json_body)
 
+    return 0
 
 if __name__ == '__main__':
     main()

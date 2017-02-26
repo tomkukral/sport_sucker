@@ -1,15 +1,25 @@
+# -*- coding: utf-8 -*-
 import requests
 import re
 
 
-class PoolScraper(object):
-    def __init__(self, url, reg):
+class RegexpScraper(object):
+    def __init__(self, **kwargs):
 
-        self.url = url
-        self.reg = reg
+        self.url = kwargs.get('url', None)
+        self.reg = kwargs.get('reg', None)
+        self.method = kwargs.get('method', 'get')
+        self.data = kwargs.get('data', '{}')
 
-    def download(self, url):
-        return requests.get(url).text
+    def download(self, url, method, data):
+        if method == 'post':
+            response = requests.post(url, data=data)
+            out = response.text.encode(response.encoding)
+        else:
+            response = requests.get(url)
+            out = response.text.encode(response.encoding)
+
+        return out
 
     def scrape(self, html):
         return html
@@ -22,7 +32,7 @@ class PoolScraper(object):
             return None
 
     def read(self):
-        html = self.download(self.url)
+        html = self.download(self.url, self.method, self.data)
         text = self.scrape(html)
         data = self.parse(text, self.reg)
         return data

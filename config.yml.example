@@ -1,0 +1,25 @@
+export:
+  mqtt:
+    host: ip_or_hostnmae
+    user: example_user
+    password: example_password
+    ssl: True
+
+sources:
+  swimming_pools:
+    Šutka:
+      url: http://www.sutka.eu
+      reg: 'Aktuální počet návštěvníků: (?P<value>[\d]+)'
+    Litomyšl":
+      url: http://www.bazen-litomysl.cz/fcecut.php
+      reg: 'Aktuálně (?P<value>[\d]+) návštěvníků'
+      method": post
+      data:
+        call: generate
+    Horaždovice:
+      url: http://www.bazen.horazdovice.cz/aktual_info.php
+      reg: '<td align=center class=highlite><span class=big_text>(?P<value>[\d]+)</span> osob</td></tr>'
+    Pardubice:
+      url: http://www.aquapce.cz
+      reg: '<li>bazén:<span>(?P<value>[\d]+)</span></li>'
+

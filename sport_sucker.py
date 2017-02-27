@@ -35,9 +35,9 @@ def main():
             json_body += (c.json())
 
     # swimming pools
-    #if cfg.get('sources', {}).get('swimming_pools', False):
-    #    c = SwimmingPools(cfg['sources']['swimming_pools'])
-    #    json_body += c.json()
+    if cfg.get('sources', {}).get('swimming_pools', False):
+        c = SwimmingPools(cfg['sources']['swimming_pools'])
+        json_body += c.json()
 
     if json_body:
         # send datapoints

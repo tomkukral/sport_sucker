@@ -1,14 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-from scrapers import RegexpScraper
 from influxdb import InfluxDBClient
 from pprint import pprint
+from stravalib import Client
 
-import datetime
-import pytz
+from sources import Strava
+from sources import SwimmingPools
+
 import yaml
-
 
 def main():
     # load configuration
@@ -20,28 +20,28 @@ def main():
             raise
 
     pprint(cfg)
+    json_body = []
 
-    if cfg.get('sources', {}).get('swimming_pools', False):
-        json_body = []
-        for k, v in cfg['sources']['swimming_pools'].items():
-            print(k)
-            a = RegexpScraper(**v)
-            fields = a.read()
+    # strava
+    if cfg.get('sources', {}).get('strava', False):
+        c = Strava(cfg['sources']['strava'])
 
-            if fields:
-                json_body.append({
-                    "measurement": "people",
-                    "tags": {
-                        "location": k,
-                    },
-                    "time": datetime.datetime.now(tz=pytz.UTC).isoformat(),
-                    "fields": {k: int(v) for (k, v) in fields.items()}
-                })
-            else:
-                print('No fields from {}'.format(k.encode('utf8')))
+        # convert swim
+        if cfg.get('sources', {}).get('strava', {}).get('convert_swim'):
+            c.convert_swimming()
 
+        # export
+        if cfg.get('sources', {}).get('strava', {}).get('token', None):
+            json_body += (c.json())
+
+    # swimming pools
+    #if cfg.get('sources', {}).get('swimming_pools', False):
+    #    c = SwimmingPools(cfg['sources']['swimming_pools'])
+    #    json_body += c.json()
+
+    if json_body:
         # send datapoints
-        client = InfluxDBClient(**cfg['export']['mqtt'])
+        client = InfluxDBClient(**cfg['export']['influxdb'])
         client.create_database('sport_sucker')
         client.switch_database('sport_sucker')
         pprint(json_body)

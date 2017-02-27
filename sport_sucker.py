@@ -42,7 +42,6 @@ def main():
     if json_body:
         # send datapoints
         client = InfluxDBClient(**cfg['export']['influxdb'])
-        client.create_database('sport_sucker')
         client.switch_database('sport_sucker')
         pprint(json_body)
         client.write_points(json_body)

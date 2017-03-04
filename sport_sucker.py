@@ -39,7 +39,7 @@ def main():
         c = SwimmingPools(cfg['sources']['swimming_pools'])
         json_body += c.json()
 
-    if json_body:
+    if json_body and cfg.get('export', {}).get('influxdb', {}):
         # send datapoints
         client = InfluxDBClient(**cfg['export']['influxdb'])
         client.switch_database('sport_sucker')

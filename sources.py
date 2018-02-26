@@ -53,7 +53,8 @@ class Strava(object):
             'start_date_local': a.start_date_local.isoformat(),
             'elapsed_time': int(a.elapsed_time.total_seconds()),
             'description': a.description,
-            'distance': a.distance
+            'distance': a.distance,
+            'private': a.private,
         }
 
     def convert_swimming(self):

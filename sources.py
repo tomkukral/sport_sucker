@@ -112,7 +112,6 @@ class SwimmingPools(object):
         out = []
 
         for k, v in self.pools.items():
-            print(k)
             a = RegexpScraper(**v)
             fields = a.read()
 

@@ -3,5 +3,5 @@ influxdb==4.0.0
 pytest==3.0.6
 pytz==2020.1
 PyYAML==5.1
-requests==2.13.0
+requests==2.20.0
 stravalib==0.6.6

@@ -1,7 +1,7 @@
 flake8==3.3.0
 influxdb==4.0.0
 pytest==3.0.6
-pytz==2016.10
+pytz==2020.1
 PyYAML==3.12
 requests==2.13.0
 stravalib==0.6.6
